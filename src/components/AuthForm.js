@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/AuthReducer";
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
 
 function AuthForm() {
+  const navigate=useNavigate()
   const nameInputRef = useRef();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
@@ -52,26 +54,35 @@ localStorage.setItem("token", token);
 
 
         dispatch(authActions.isLogin(token));
+navigate('/expensetracker')
+
       } else {
         const response = await axios.post("http://localhost:3000/login", {
           email,
           password,
         });
 
-        console.log(response.data);
+//         console.log(response.data);
         const { token } = response.data;
-        const { userId } = response.data.userId;
+        const { userId } = response.data;
 
         localStorage.setItem("userId", userId);
 localStorage.setItem("token", token);
 
 
         dispatch(authActions.isLogin(token));
+            navigate('/expensetracker')
       }
     } catch (err) {
       console.log(err);
     }
   }
+  useEffect(()=>{
+    const token=localStorage.getItem('token')
+    if(token){
+      dispatch(authActions.isLogin(token));
+    }
+  },[])
   return (
     <div
       className="d-flex justify-content-center align-items-center vh-100 m-auto"
@@ -160,7 +171,7 @@ localStorage.setItem("token", token);
           </form>
         </div>
       )}
-      {isLoggedIn && <h2>You are already logged in</h2>}
+      {/* {isLoggedIn && <h2>You are already logged in</h2>} */}
     </div>
   );
 }
