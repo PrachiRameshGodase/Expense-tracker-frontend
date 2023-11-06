@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '../store/AuthReducer';
 import axios from "axios"
@@ -15,6 +15,35 @@ function ExpenseTracker() {
     const userId=localStorage.getItem('userId')
     const token=localStorage.getItem('token')
 
+    async function fetchExpenses() {
+      try {
+        const response = await axios.get('http://localhost:3000/expense');
+        const data = response.data;
+        const fetcheddata = [];
+        for (const key in data) {
+          if (data[key].userId == userId) {
+            fetcheddata.push({
+              id: data[key].id,
+              amount: data[key].amount,
+              category: data[key].category,
+              description: data[key].description
+            });
+          }
+        }
+        seExpenses(fetcheddata);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  
+
+    useEffect(() => {
+      if (token) {
+        dispatch(authActions.isLogin(token));
+      }
+      fetchExpenses(); 
+    }, []); 
+  
 
     async function submitHandler(e){
       try{
@@ -23,34 +52,41 @@ function ExpenseTracker() {
       const amount=formRef.current.elements.amount.value;
       const category=formRef.current.elements.category.value;
       const description=formRef.current.elements.description.value;
-      console.log(description)
-
+      // console.log(description)
+      e.target.reset();
       const obj={
         amount,
         category,
         description
       }
+      // console.log(obj)
       if (!updateData) {
         await axios.post("http://localhost:3000/expense", obj,{headers: {
           Authorization: localStorage.getItem("token"), 
       }}  )
       } else {
+        // console.log(updateData)
         await axios.put(
           `http://localhost:3000/expense/${updateData}`,
           obj
         );
-        console.log(updateData)
+        
         setUpdateData(null);
       }
-      // const respone= await axios.post("http://localhost:3000/expense", obj );
-      // console.log(respone.data)
+      fetchExpenses()
+      // const response= await axios.post("http://localhost:3000/expense", obj,{headers:{
+      //   Authorization:localStorage.getItem('token')
+      // }} );
+      // console.log(response.data)
+      // fetchExpenses()
     }catch(err){
       console.log(err)
     }
+   
     }
     
     async function deleteExpense(expenseid){
-      console.log("expenseId",expenseid)
+      // console.log("expenseId",expenseid)
 
       seExpenses(prevExpenses => prevExpenses.filter(expense => expense.id !== expenseid));
 
@@ -65,6 +101,7 @@ function ExpenseTracker() {
         formRef.current.elements.category.value = expenseToEdit.category;
         formRef.current.elements.description.value = expenseToEdit.description;
       }
+      setUpdateData(expenseid)
     }
     const sum = expenses.reduce((total, expense) => total + parseInt(expense.amount), 0);
 
@@ -88,7 +125,7 @@ function ExpenseTracker() {
   
       URL.revokeObjectURL(url);
     }
-
+    
   return (
     <Fragment>
        <div>
