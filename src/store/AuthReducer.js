@@ -13,15 +13,20 @@ const authSlice = createSlice({
     islogout(state) {
       state.isAuthenticated = false;
       localStorage.removeItem("token");
+      localStorage.removeItem("userId")
+      localStorage.removeItem("email")
     },
     isPremium(state,action){
       if(action.payload>1000){
         state.isPremium=true;
       }
       else{
-        state.darktoggle!=state.darktoggle
+        state.isPremium=false
       }
-    }
+    },
+    darkToggle(state) {
+      state.darktoggle = true;
+    },
   },
 });
 export const authActions = authSlice.actions;

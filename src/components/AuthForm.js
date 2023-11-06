@@ -43,11 +43,11 @@ function AuthForm() {
           password,
         });
 
-        console.log(respone.data);
+        // console.log(respone.data);
         const { token } = respone.data;
         const { userId } = respone.data;
-        console.log(token);
-        console.log(userId);
+        // console.log(token);
+        // console.log(userId);
 
         localStorage.setItem("userId", userId);
 localStorage.setItem("token", token);

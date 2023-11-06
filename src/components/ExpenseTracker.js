@@ -14,6 +14,7 @@ function ExpenseTracker() {
     const isToggle=useSelector((state)=>state.auth.darktoggle)
     const userId=localStorage.getItem('userId')
     const token=localStorage.getItem('token')
+   
 
     async function fetchExpenses() {
       try {
@@ -45,48 +46,42 @@ function ExpenseTracker() {
     }, []); 
   
 
-    async function submitHandler(e){
-      try{
-      e.preventDefault()
-
-      const amount=formRef.current.elements.amount.value;
-      const category=formRef.current.elements.category.value;
-      const description=formRef.current.elements.description.value;
-      // console.log(description)
-      e.target.reset();
-      const obj={
-        amount,
-        category,
-        description
-      }
-      // console.log(obj)
+    async function submitHandler(event) {
+      event.preventDefault();
+  
+      const amountInput = formRef.current.elements.amount.value;
+      const descriptionInput = formRef.current.elements.description.value;
+      const categoryInput = formRef.current.elements.category.value;
+      // console.log(amountInput, descriptionInput, categoryInput);
+      // event.target.reset();
+  
+      const expenseData = {
+        amount: parseInt(amountInput),
+        description: descriptionInput,
+        category: categoryInput,
+      };
+      // setExpenses([expenseData]);
+      // setExpenses((prevExpenses) => [...prevExpenses, expenseData]);
+      console.log(expenseData);
       if (!updateData) {
-        await axios.post("http://localhost:3000/expense", obj,{headers: {
-          Authorization: localStorage.getItem("token"), 
-      }}  )
+        await axios.post("http://localhost:3000/expense", expenseData, {
+          headers: {
+            Authorization: localStorage.getItem('token') // Include the JWT token from local storage
+          },
+        });
       } else {
-        // console.log(updateData)
         await axios.put(
           `http://localhost:3000/expense/${updateData}`,
-          obj
+          expenseData
         );
-        
+        // console.log(updateData)
         setUpdateData(null);
       }
-      fetchExpenses()
-      // const response= await axios.post("http://localhost:3000/expense", obj,{headers:{
-      //   Authorization:localStorage.getItem('token')
-      // }} );
-      // console.log(response.data)
-      // fetchExpenses()
-    }catch(err){
-      console.log(err)
-    }
-   
+      fetchExpenses();
     }
     
     async function deleteExpense(expenseid){
-      // console.log("expenseId",expenseid)
+      console.log("expenseId",expenseid)
 
       seExpenses(prevExpenses => prevExpenses.filter(expense => expense.id !== expenseid));
 
