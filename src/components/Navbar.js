@@ -74,6 +74,7 @@ function Header() {
           } else {
             // Payment failed
             // Handle the failure case
+            alert("Payment failed")
           }
         },
         prefill: {
