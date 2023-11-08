@@ -44,7 +44,7 @@ function Header() {
 
       const options = {
         key: keyId,
-        amount: 1000, // Example amount
+        amount: 2000, // Example amount
         currency: "INR", // Example currency
         name: "Sharpener",
         description: "Purchase Premium",
@@ -67,10 +67,13 @@ function Header() {
                 },
               }
             );
-
-            // Handle the response and perform necessary actions
-
-            // Redirect or display a success message to the user
+            if (
+              updateResponse.data.message === "Transaction updated successfully"
+            ) {
+              // Payment successful and transaction updated
+              //dispatch action isPremium
+              dispatch(authActions.isPremium(true))
+            }
           } else {
             // Payment failed
             // Handle the failure case
@@ -86,7 +89,7 @@ function Header() {
           address: "Razorpay Corporate Office",
         },
         theme: {
-          color: "#F37254",
+          color: "blue",
         },
       };
 
@@ -120,7 +123,7 @@ function Header() {
               <button className='bg-gradient-to-b from-red-600 via-red-500 to-red-800  hover:bg-purple-600 py-2 px-4 font-bold text-white rounded'>LOGIN</button>
             </Link>
           )}
-          {isPremium && (
+          {!isPremium && isAuth&& (
             <button
               className={`bg-gradient-to-r from-red-600 via-green-500 to-red-600 py-2 px-4 font-bold text-white rounded hover:bg-red-800  ${
                 isBouncing ? classes.bouncing : ''

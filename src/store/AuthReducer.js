@@ -17,7 +17,8 @@ const authSlice = createSlice({
       localStorage.removeItem("email")
     },
     isPremium(state,action){
-      if(action.payload>1000){
+      console.log("from authredux",action.payload)
+     if(action.payload==true){
         state.isPremium=true;
       }
       else{

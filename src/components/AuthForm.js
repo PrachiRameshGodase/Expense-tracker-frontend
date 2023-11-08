@@ -65,12 +65,14 @@ navigate('/expensetracker')
 //         console.log(response.data);
         const { token } = response.data;
         const { userId } = response.data;
+        const {isPremium}=response.data
+
+        dispatch(authActions.isPremium(isPremium))
 
         localStorage.setItem("userId", userId);
 localStorage.setItem("token", token);
-
-
-        dispatch(authActions.isLogin(token));
+dispatch(authActions.isLogin(token))
+ 
             navigate('/expensetracker')
       }
     } catch (err) {

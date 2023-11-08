@@ -11,7 +11,7 @@ function ExpenseTracker() {
     const [updateData, setUpdateData] = useState(null);
 
 
-    const isToggle=useSelector((state)=>state.auth.darktoggle)
+    const isPremium=useSelector((state)=>state.auth.isPremium)
     const userId=localStorage.getItem('userId')
     const token=localStorage.getItem('token')
    
@@ -125,8 +125,8 @@ function ExpenseTracker() {
     <Fragment>
        <div>
 
-        {!isToggle && <Button onClick={downloadExpensesAsTxt}  className='flex justify-end mx-auto'>DownLoad File</Button> }
-        {!isToggle && (<form onSubmit={submitHandler} ref={formRef} className="bg-gradient-to-b from-blue-800 via-pink-500 to-purple-800  rounded-lg shadow-md p-6 space-y-6 wd-full mx-auto max-w-xl mt-4">
+        {!isPremium && <Button onClick={downloadExpensesAsTxt}  className='flex justify-end mx-auto'>DownLoad File</Button> }
+        {!isPremium && (<form onSubmit={submitHandler} ref={formRef} className="bg-gradient-to-b from-blue-800 via-pink-500 to-purple-800  rounded-lg shadow-md p-6 space-y-6 wd-full mx-auto max-w-xl mt-4">
         <h2 className=" flex text-2xl font-bold text-white mb-4 justify-center">ADD EXPENSE</h2>
 
         <div>
@@ -191,7 +191,7 @@ function ExpenseTracker() {
     </form>)}
 
 
-  {!isToggle && (<ul className="bg-gradient-to-b from-blue-800 via-pink-500 to-purple-500 rounded-lg shadow-md p-6 space-y-4 mt-7 mx-5">
+  {!isPremium && (<ul className="bg-gradient-to-b from-blue-800 via-pink-500 to-purple-500 rounded-lg shadow-md p-6 space-y-4 mt-7 mx-5">
     {expenses && expenses.map((item, index) => (
       <li key={index} className="border-b border-gray-300 py-2 flex text-white">
         <span className="font-semibold mx-2">Amount:</span> {item.amount}---{' '}
@@ -207,13 +207,13 @@ function ExpenseTracker() {
 
 
 
-  {isToggle && <div style={{backgroundColor:"black"}}>
+  {isPremium && <div style={{backgroundColor:"black"}}>
   <div className='' style={{display:"flex" , flexDirection:"row", justifyContent:"space-between"}}>
   <Button onClick={downloadExpensesAsTxt} className=''>DownLoad File</Button>
   <span className=' text-white'>Dark theme is active now</span>
 
   </div>
-  { isToggle && (
+  { isPremium && (
     
   <form onSubmit={submitHandler} className="bg-gradient-to-b from-green-600 via-red-700 to-green-600 rounded-lg shadow-md p-6 space-y-6 wd-full mx-auto max-w-xl mt-6" ref={formRef}>
     <h2 className=" flex text-2xl font-bold text-white mb-4 justify-center">ADD EXPENSE</h2>
@@ -281,7 +281,7 @@ function ExpenseTracker() {
 </form>)}
 
 
-{isToggle && (<ul className="bg-gradient-to-r from-red-600 via-green-500 to-red-600 rounded-lg shadow-md p-6 space-y-4 mt-7 mx-5">
+{isPremium && (<ul className="bg-gradient-to-r from-red-600 via-green-500 to-red-600 rounded-lg shadow-md p-6 space-y-4 mt-7 mx-5">
   {expenses && expenses.map((item, index) => (
     <li key={index} className="border-b border-gray-300 py-2 flex text-white">
       <span className="font-semibold mx-2">Amount:</span> {item.amount}---{' '}
