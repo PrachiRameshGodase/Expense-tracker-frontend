@@ -53,6 +53,7 @@ function AuthForm() {
 localStorage.setItem("token", token);
 
 
+
         dispatch(authActions.isLogin(token));
 navigate('/expensetracker')
 
@@ -71,6 +72,7 @@ navigate('/expensetracker')
 
         localStorage.setItem("userId", userId);
 localStorage.setItem("token", token);
+localStorage.setItem("isPremium",isPremium)
 dispatch(authActions.isLogin(token))
  
             navigate('/expensetracker')

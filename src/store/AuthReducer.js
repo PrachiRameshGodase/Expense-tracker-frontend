@@ -15,6 +15,8 @@ const authSlice = createSlice({
       localStorage.removeItem("token");
       localStorage.removeItem("userId")
       localStorage.removeItem("email")
+      localStorage.removeItem("isPremium")
+    
     },
     isPremium(state,action){
       console.log("from authredux",action.payload)

@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import classes from "../components/Navbar.module.css"
@@ -14,12 +14,17 @@ function Header() {
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const isPremium = useSelector((state) => state.auth.isPremium);
+  const isPremiumReload=localStorage.getItem("isPremium")
   const token=localStorage.getItem('token')
 
   // const handleButtonClick = () => {
   //   setIsBouncing(false);
   //   dispatch(authActions.darkToggle());
   // };
+
+  useEffect(()=>{
+    dispatch(authActions.isPremium(isPremiumReload==="true"))
+  },[])
 
   const navigate = useNavigate();
 
@@ -41,14 +46,15 @@ function Header() {
       );
 
       const { keyId, orderId } = response.data;
-
+console.log(orderId)
       const options = {
         key: keyId,
-        amount: 2000, // Example amount
+        amount: 1000, // Example amount
         currency: "INR", // Example currency
         name: "Sharpener",
         description: "Purchase Premium",
         order_id: orderId,
+
         handler: async function (response) {
           // Handler function for success or failure
 
@@ -73,6 +79,7 @@ function Header() {
               // Payment successful and transaction updated
               //dispatch action isPremium
               dispatch(authActions.isPremium(true))
+              localStorage.setItem("isPremium",true)
             }
           } else {
             // Payment failed
@@ -83,7 +90,7 @@ function Header() {
         prefill: {
           name: "Test",
           email: "test@example.com",
-          contact: "+919876543210",
+          contact: "",
         },
         notes: {
           address: "Razorpay Corporate Office",

@@ -12,7 +12,8 @@ function App() {
       <Navbar/>
       <Routes>
         <Route path="/" element={<AuthForm />} />
-        <Route path="/expensetracker" element={<ExpenseTracker />} />
+        {/* <Route path="/expensetracker" element={<ExpenseTracker />} /> */}
+        {isAuth ?(<Route path='/expensetracker' element={<ExpenseTracker/>}/>):(<Route path='/expensetracker' element={<AuthForm/>}/>)}
 
       </Routes>
     </Router>

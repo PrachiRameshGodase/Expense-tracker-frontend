@@ -12,6 +12,7 @@ function ExpenseTracker() {
 
 
     const isPremium=useSelector((state)=>state.auth.isPremium)
+    const isPremiumReload=localStorage.getItem("isPremium")
     const userId=localStorage.getItem('userId')
     const token=localStorage.getItem('token')
    
@@ -210,7 +211,7 @@ function ExpenseTracker() {
   {isPremium && <div style={{backgroundColor:"black"}}>
   <div className='' style={{display:"flex" , flexDirection:"row", justifyContent:"space-between"}}>
   <Button onClick={downloadExpensesAsTxt} className=''>DownLoad File</Button>
-  <span className=' text-white'>Dark theme is active now</span>
+  <span className=' text-white'>You are Premium user</span>
 
   </div>
   { isPremium && (
