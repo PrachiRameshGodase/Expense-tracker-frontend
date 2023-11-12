@@ -1,139 +1,299 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from '../store/AuthReducer';
-import axios from "axios"
-import { Button } from 'react-bootstrap';
+// import React, { Fragment, useEffect, useRef, useState } from 'react'
+// import { useDispatch, useSelector } from 'react-redux';
+// import { authActions } from '../store/AuthReducer';
+// import axios from "axios"
+// import { Button } from 'react-bootstrap';
 
-function ExpenseTracker() {
-    const formRef=useRef()
-    const dispatch=useDispatch()
-    const [expenses,seExpenses]=useState([])
-    const [updateData, setUpdateData] = useState(null);
+// function ExpenseTracker() {
+//     const formRef=useRef()
+//     const dispatch=useDispatch()
+//     const [expenses,seExpenses]=useState([])
+//     const [updateData, setUpdateData] = useState(null);
 
-
-    const isPremium=useSelector((state)=>state.auth.isPremium)
-    const isPremiumReload=localStorage.getItem("isPremium")
-    const userId=localStorage.getItem('userId')
-    const token=localStorage.getItem('token')
+//     const isPremiumReload=localStorage.getItem("isPremium")
+     
+//     const isPremium = useSelector((state) => state.auth.ispremium);
+//     console.log("From expense",isPremium)
+    
+//     const userId=localStorage.getItem('userId')
+//     const token=localStorage.getItem('token')
    
 
-    async function fetchExpenses() {
-      try {
-        const response = await axios.get('http://localhost:3000/expense');
-        const data = response.data;
-        const fetcheddata = [];
-        for (const key in data) {
-          if (data[key].userId == userId) {
-            fetcheddata.push({
-              id: data[key].id,
-              amount: data[key].amount,
-              category: data[key].category,
-              description: data[key].description
-            });
+//     async function fetchExpenses() {
+//       try {
+//         const response = await axios.get('http://localhost:3000/expense');
+//         const data = response.data;
+//         const fetcheddata = [];
+//         for (const key in data) {
+//           if (data[key].userId == userId) {
+//             fetcheddata.push({
+//               id: data[key].id,
+//               amount: data[key].amount,
+//               category: data[key].category,
+//               description: data[key].description
+//             });
+//           }
+//         }
+//         seExpenses(fetcheddata);
+//       } catch (err) {
+//         console.log(err);
+//       }
+//     }
+  
+
+//     useEffect(() => {
+//       if (token) {
+//         dispatch(authActions.isLogin(token));
+//       }
+      
+     
+      
+//       fetchExpenses(); 
+//     }, []); 
+  
+
+//     async function submitHandler(event) {
+//       event.preventDefault();
+  
+//       const amountInput = formRef.current.elements.amount.value;
+//       const descriptionInput = formRef.current.elements.description.value;
+//       const categoryInput = formRef.current.elements.category.value;
+//       // console.log(amountInput, descriptionInput, categoryInput);
+//       // event.target.reset();
+  
+//       const expenseData = {
+//         amount: parseInt(amountInput),
+//         description: descriptionInput,
+//         category: categoryInput,
+//       };
+//       // setExpenses([expenseData]);
+//       // setExpenses((prevExpenses) => [...prevExpenses, expenseData]);
+//       console.log(expenseData);
+//       if (!updateData) {
+//         try {
+//           const response = await axios.post("http://localhost:3000/expense", expenseData, {
+//             headers: {
+//               Authorization: localStorage.getItem('token')
+//             },
+//           });
+//           console.log("Response:", response.data);
+//         } catch (error) {
+//           console.error("Axios Error:", error);
+//         }
+        
+//       }else {
+//         await axios.put(
+//           `http://localhost:3000/expense/${updateData}`,
+//           expenseData
+//         );
+//         // console.log(updateData)
+//         setUpdateData(null);
+//       }
+//       fetchExpenses();
+//     }
+    
+//     async function deleteExpense(expenseid){
+//       console.log("expenseId",expenseid)
+
+//       seExpenses(prevExpenses => prevExpenses.filter(expense => expense.id !== expenseid));
+
+//       const response=await axios.delete(`http://localhost:3000/expense/${expenseid}`)
+//     }
+
+//     function editExpense(expenseid) {
+//       const expenseToEdit = expenses.find((expense) => expense.id === expenseid); // Use '===' for comparison
+//       //populating the expense
+//       if (expenseToEdit) {
+//         formRef.current.elements.amount.value = expenseToEdit.amount;
+//         formRef.current.elements.category.value = expenseToEdit.category;
+//         formRef.current.elements.description.value = expenseToEdit.description;
+//       }
+//       setUpdateData(expenseid)
+//     }
+//     const sum = expenses.reduce((total, expense) => total + parseInt(expense.amount), 0);
+
+
+//     if(sum){
+//       dispatch(authActions.ispremium(sum))
+//     }
+
+//     function downloadExpensesAsTxt(){
+//       const data = expenses.map((expense) => {
+//         return `Amount: ${expense.amount} | Description: ${expense.description} | Category: ${expense.category}`;
+//       });
+//       const text = data.join("\n");
+//       const blob = new Blob([text], { type: "text/plain" });
+//       const url = URL.createObjectURL(blob);
+  
+//       const link = document.createElement("a");
+//       link.href = url;
+//       link.download = "expenses.txt";
+//       link.click();
+  
+//       URL.revokeObjectURL(url);
+//     }
+    
+//   return (
+//     <Fragment>
+
+//     </Fragment>
+
+//   )
+// }
+
+// export default ExpenseTracker
+
+// // import React from 'react'
+
+// // function ExpenseTracker() {
+// //   return (
+// //     <div>
+// //       <h1>Hello</h1>
+// //     </div>
+// //   )
+// // }
+
+// // export default ExpenseTracker
+
+import React, { useRef, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/AuthReducer";
+import { useSelector } from "react-redux";
+import { Button } from 'react-bootstrap';
+
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+export default function ExpenseTracker() {
+  const formRef = useRef();
+  const dispatch = useDispatch();
+  const [expenses, setExpenses] = useState([]);
+ 
+  const isPremium = useSelector((state) => state.auth.isPremium);
+  console.log(isPremium)
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+  const userId=localStorage.getItem('userId')
+ 
+
+  const [updateData, setUpdateData] = useState(null);
+  const sum = expenses.reduce(
+    (total, expense) => total + parseInt(expense.amount),
+    0
+  );
+
+  useEffect(() => {
+          if (token) {
+            dispatch(authActions.isLogin(token));
           }
-        }
-        seExpenses(fetcheddata);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  
+          
+         
+          
+        fetchExpenses(); 
+        }, []); 
+      
+        async function fetchExpenses() {
+                try {
+                  const response = await axios.get('http://localhost:3000/expense');
+                  const data = response.data;
+                  const fetcheddata = [];
+                  for (const key in data) {
+                    if (data[key].userId == userId) {
+                      fetcheddata.push({
+                        id: data[key].id,
+                        amount: data[key].amount,
+                        category: data[key].category,
+                        description: data[key].description
+                      });
+                    }
+                  }
+                  setExpenses(fetcheddata);
+                } catch (err) {
+                  console.log(err);
+                }
+              }
 
-    useEffect(() => {
-      if (token) {
-        dispatch(authActions.isLogin(token));
-      }
-      fetchExpenses(); 
-    }, []); 
-  
+  async function submitHandler(event) {
+    event.preventDefault();
 
-    async function submitHandler(event) {
-      event.preventDefault();
-  
-      const amountInput = formRef.current.elements.amount.value;
-      const descriptionInput = formRef.current.elements.description.value;
-      const categoryInput = formRef.current.elements.category.value;
-      // console.log(amountInput, descriptionInput, categoryInput);
-      // event.target.reset();
-  
-      const expenseData = {
-        amount: parseInt(amountInput),
-        description: descriptionInput,
-        category: categoryInput,
-      };
-      // setExpenses([expenseData]);
-      // setExpenses((prevExpenses) => [...prevExpenses, expenseData]);
-      console.log(expenseData);
-      if (!updateData) {
-        await axios.post("http://localhost:3000/expense", expenseData, {
-          headers: {
-            Authorization: localStorage.getItem('token') // Include the JWT token from local storage
-          },
-        });
-      } else {
-        await axios.put(
-          `http://localhost:3000/expense/${updateData}`,
-          expenseData
-        );
-        // console.log(updateData)
-        setUpdateData(null);
-      }
-      fetchExpenses();
-    }
+    const amountInput = formRef.current.elements.amount.value;
+    const descriptionInput = formRef.current.elements.description.value;
+    const categoryInput = formRef.current.elements.category.value;
     
-    async function deleteExpense(expenseid){
-      console.log("expenseId",expenseid)
+    event.target.reset();
 
-      seExpenses(prevExpenses => prevExpenses.filter(expense => expense.id !== expenseid));
+    const expenseData = {
+      amount: parseInt(amountInput),
+      description: descriptionInput,
+      category: categoryInput,
+     
+    };
 
-      const response=await axios.delete(`http://localhost:3000/expense/${expenseid}`)
-    }
-
-    function editExpense(expenseid) {
-      const expenseToEdit = expenses.find((expense) => expense.id === expenseid); // Use '===' for comparison
-      //populating the expense
-      if (expenseToEdit) {
-        formRef.current.elements.amount.value = expenseToEdit.amount;
-        formRef.current.elements.category.value = expenseToEdit.category;
-        formRef.current.elements.description.value = expenseToEdit.description;
-      }
-      setUpdateData(expenseid)
-    }
-    const sum = expenses.reduce((total, expense) => total + parseInt(expense.amount), 0);
-
-
-    if(sum){
-      dispatch(authActions.isPremium(sum))
-    }
-
-    function downloadExpensesAsTxt(){
-      const data = expenses.map((expense) => {
-        return `Amount: ${expense.amount} | Description: ${expense.description} | Category: ${expense.category}`;
+    console.log(expenseData);
+    if (!updateData) {
+      await axios.post("http://localhost:3000/expense", expenseData, {
+        headers: {
+          Authorization: localStorage.getItem("token"), // Include the JWT token from local storage
+        },
       });
-      const text = data.join("\n");
-      const blob = new Blob([text], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-  
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "expenses.txt";
-      link.click();
-  
-      URL.revokeObjectURL(url);
+    } else {
+      await axios.put(
+        `http://localhost:3000/expense/${updateData}`,
+        expenseData
+      );
+      // console.log(updateData)
+      setUpdateData(null);
     }
-    
+   fetchExpenses();
+  }
+
+  const deleteExpense = (expenseId) => {
+    console.log("ID", expenseId);
+    setExpenses((prevExpenses) =>
+      prevExpenses.filter((expense) => expense.id !== expenseId)
+    );
+    axios.delete(`http://localhost:3000/expense/${expenseId}`);
+  };
+  const editExpense = (expenseId) => {
+    //   findind the specific object  which needs to populate
+    setUpdateData(expenseId);
+    const expenseToEdit = expenses.find((expense) => expense.id === expenseId);
+    if (expenseToEdit) {
+      formRef.current.elements.amount.value = expenseToEdit.amount;
+      formRef.current.elements.description.value = expenseToEdit.description;
+      formRef.current.elements.category.value = expenseToEdit.category;
+    }
+  };
+
+  
+  function downloadExpensesAsTxt(){
+          const data = expenses.map((expense) => {
+            return `Amount: ${expense.amount} | Description: ${expense.description} | Category: ${expense.category}`;
+          });
+          const text = data.join("\n");
+          const blob = new Blob([text], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+      
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "expenses.txt";
+          link.click();
+      
+          URL.revokeObjectURL(url);
+        }
   return (
-    <Fragment>
-       <div>
+    <>
+            <div>
 
-        {!isPremium && <Button onClick={downloadExpensesAsTxt}  className='flex justify-end mx-auto'>DownLoad File</Button> }
+     {!isPremium&& <Button onClick={downloadExpensesAsTxt}  className='flex justify-end mx-auto'>DownLoad File</Button> }
         {!isPremium && (<form onSubmit={submitHandler} ref={formRef} className="bg-gradient-to-b from-blue-800 via-pink-500 to-purple-800  rounded-lg shadow-md p-6 space-y-6 wd-full mx-auto max-w-xl mt-4">
-        <h2 className=" flex text-2xl font-bold text-white mb-4 justify-center">ADD EXPENSE</h2>
+         <h2 className=" flex text-2xl font-bold text-white mb-4 justify-center">ADD EXPENSE</h2>
 
-        <div>
-          <label htmlFor="amount" className="block text-white font-semibold mb-1">
-            Expense Amount
-          </label>
+      <div>
+        <label htmlFor="amount" className="block text-white font-semibold mb-1">
+          Expense Amount
+         </label>
           <input
             type="number"
             id="amount"
@@ -294,22 +454,6 @@ function ExpenseTracker() {
   ))}
 </ul>)}
 </div>}
-    </Fragment>
-
-  )
+    </>
+  );
 }
-
-export default ExpenseTracker
-
-// import React from 'react'
-
-// function ExpenseTracker() {
-//   return (
-//     <div>
-//       <h1>Hello</h1>
-//     </div>
-//   )
-// }
-
-// export default ExpenseTracker
-

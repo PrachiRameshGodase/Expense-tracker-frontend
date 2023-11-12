@@ -4,6 +4,7 @@ import ExpenseTracker from './components/ExpenseTracker';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from "./components/Navbar"
 import { useSelector } from 'react-redux';
+import LeaderBoard from './components/LeaderBoard';
 
 function App() {
   const isAuth=useSelector(state=>state.auth.isAuthenticated)
@@ -12,7 +13,7 @@ function App() {
       <Navbar/>
       <Routes>
         <Route path="/" element={<AuthForm />} />
-        {/* <Route path="/expensetracker" element={<ExpenseTracker />} /> */}
+        <Route path="/leaderboard" element={<LeaderBoard />} />
         {isAuth ?(<Route path='/expensetracker' element={<ExpenseTracker/>}/>):(<Route path='/expensetracker' element={<AuthForm/>}/>)}
 
       </Routes>

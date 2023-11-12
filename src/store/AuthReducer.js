@@ -18,17 +18,18 @@ const authSlice = createSlice({
       localStorage.removeItem("isPremium")
     
     },
-    isPremium(state,action){
-      console.log("from authredux",action.payload)
-     if(action.payload==true){
-        state.isPremium=true;
-      }
-      else{
-        state.isPremium=false
+    ispremium(state, action) {
+      console.log("from authredux", action.payload);
+      if (action.payload == true ) {
+        state.isPremium = true;
+      } else {
+        state.isPremium = false;
       }
     },
+
+    
     darkToggle(state) {
-      state.darktoggle = true;
+      state.darktoggle = !state.darktoggle;
     },
   },
 });

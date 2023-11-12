@@ -15,13 +15,16 @@ function AuthForm() {
   const dispatch = useDispatch();
   
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
-
+console.log(isLoggedIn,"auth")
   const [isLoading, setisLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
   const switchAuthModeHandler=()=>{
     setIsLogin((prevState)=>!prevState)
   }
+  
+  
+  
 
   async function submitHandler(e) {
     try {
@@ -43,18 +46,22 @@ function AuthForm() {
           password,
         });
 
-        // console.log(respone.data);
+        console.log(respone.data);
         const { token } = respone.data;
         const { userId } = respone.data;
-        // console.log(token);
-        // console.log(userId);
+        const {isPremium}=respone.data
+        console.log(token);
+        console.log(userId);
+        console.log("ispremium from authform",isPremium)
 
         localStorage.setItem("userId", userId);
 localStorage.setItem("token", token);
+localStorage.setItem("isPremium",isPremium)
 
 
 
         dispatch(authActions.isLogin(token));
+        dispatch(authActions.ispremium(isPremium))
 navigate('/expensetracker')
 
       } else {
@@ -63,12 +70,14 @@ navigate('/expensetracker')
           password,
         });
 
-//         console.log(response.data);
+        console.log("from auth form",response.data);
         const { token } = response.data;
         const { userId } = response.data;
         const {isPremium}=response.data
-
-        dispatch(authActions.isPremium(isPremium))
+        console.log(token);
+        console.log(userId);
+        console.log("ispremium from authform",isPremium)
+        dispatch(authActions.ispremium(isPremium))
 
         localStorage.setItem("userId", userId);
 localStorage.setItem("token", token);
