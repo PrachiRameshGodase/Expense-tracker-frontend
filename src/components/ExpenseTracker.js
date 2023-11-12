@@ -371,7 +371,7 @@ export default function ExpenseTracker() {
   {isPremium && <div style={{backgroundColor:"black"}}>
   <div className='' style={{display:"flex" , flexDirection:"row", justifyContent:"space-between"}}>
   <Button onClick={downloadExpensesAsTxt} className=''>DownLoad File</Button>
-  <span className=' text-white'>You are Premium user</span>
+  <span className=' text-yellow-500 text-xl mr-2'>You are Premium user</span>
 
   </div>
   { isPremium && (

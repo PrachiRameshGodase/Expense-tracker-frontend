@@ -8,21 +8,23 @@ import classes from "../components/Navbar.module.css"
 import { authActions } from "../store/AuthReducer"
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
-
+import { Avatar,Tooltip } from '@mui/material';
 function Header() {
   const [isBouncing, setIsBouncing] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const isPremium = useSelector((state) => state.auth.isPremium)
 console.log("navabr",isPremium)
   const isPremiumReload=localStorage.getItem("isPremium")
   const token=localStorage.getItem('token')
+  const enteredEmail=localStorage.getItem('email')
 
-  // const handleButtonClick = () => {
-  //   setIsBouncing(false);
-  //   dispatch(authActions.darkToggle());
-  // };
-
+  
+  const toggleAvtar=()=>{
+    setIsHovered((prevValue) => !prevValue);
+  }
   useEffect(()=>{
     dispatch(authActions.ispremium(isPremiumReload==="true"))
   },[])
@@ -104,7 +106,7 @@ console.log(keyId)
 
       const razorpayInstance = new window.Razorpay(options);
       razorpayInstance.open();
-setIsBouncing(false)
+
     } catch (error) {
       // Handle error
     }
@@ -129,12 +131,39 @@ const leaderBoardHandler=()=>{
           Expense tracker
         </h1>
 
-        <div>
+        <div className="flex">
           {!isAuth && (
             <Link to="/">
               <button className='bg-gradient-to-b from-red-600 via-red-500 to-red-800  hover:bg-purple-600 py-2 px-4 font-bold text-white rounded'>LOGIN</button>
             </Link>
           )}
+          {isAuth && (
+              <Tooltip
+                title={enteredEmail}
+                placement="bottom"
+                open={isHovered}
+                onClose={() => setIsHovered(false)}
+                onOpen={() => setIsHovered(true)}
+              >
+                <Avatar
+                className="bg-gradient-to-b from-yellow-200 to-pink-600 mr-3"
+              style={{ marginRight: "10px", cursor: "pointer"}}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  onClick={toggleAvtar}
+                >
+                  {!isHovered ? (
+                    <span className={classes.avatarText}>
+                      {enteredEmail && <Avatar className="bg-gradient-to-b from-yellow-200 to-pink-700 " />}
+                    </span>
+                  ) : (
+                    <span>
+                      {enteredEmail && enteredEmail.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </Avatar>
+              </Tooltip>
+            )}
           {isAuth && !isPremium &&(
             <button
               className={`bg-gradient-to-r from-red-600 via-green-500 to-red-600 py-2 px-4 font-bold text-white rounded hover:bg-red-800  ${

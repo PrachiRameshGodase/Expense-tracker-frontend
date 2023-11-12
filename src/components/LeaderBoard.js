@@ -10,9 +10,9 @@ const dispatch=useDispatch()
     const fetchData=async()=>{
         try{
             const response=await axios.get('http://localhost:3000/showleaderboard')
-            console.log(response.data.leaderBoard)
+            console.log(response.data.leaderboard)
 
-            setLeaderBoard(response.data.leaderBoard || [])
+            setLeaderBoard(response.data.leaderboard || [])
         }catch(err){
             console.log(err)
             setLeaderBoard([]) //set an empty array on error
@@ -27,16 +27,17 @@ const dispatch=useDispatch()
         fetchData()
     },[])
   return (
-    <div>
-      <h1>LeaderBoard</h1>
-     {/* <ul>
+    <div className=" text-white ">
+      <h1 className='bg-gray-800 px-4 py-4'>LeaderBoard</h1>
+     <ul className='font-semibold text-lg'>
         {leaderBoard && leaderBoard.map((item,index)=>(
            <li key={index}>
-           <span className='font-semibold'>{item.name}</span>-{item.totalExpenses}
+            <span className='mr-4'>{index + 1}.</span>
+           <span className=' mr-4'>{item.name}</span>Total Expense :{item.totalExpense}
        </li> 
         ))}
         
-     </ul> */}
+     </ul>
     </div>
   )
 }
