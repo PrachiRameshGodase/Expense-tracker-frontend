@@ -9,7 +9,7 @@ const dispatch=useDispatch()
 
     const fetchData=async()=>{
         try{
-            const response=await axios.get('http://localhost:3000/showleaderboard')
+            const response=await axios.get('http://localhost:3000/premium/showleaderboard')
             console.log(response.data.leaderboard)
 
             setLeaderBoard(response.data.leaderboard || [])
@@ -28,12 +28,12 @@ const dispatch=useDispatch()
     },[])
   return (
     <div className=" text-white ">
-      <h1 className='bg-gray-800 px-4 py-4'>LeaderBoard</h1>
+      <h1 className='text-white px-4 py-4 font-semibold bg-slate-800'>LeaderBoard</h1>
      <ul className='font-semibold text-lg'>
         {leaderBoard && leaderBoard.map((item,index)=>(
            <li key={index}>
             <span className='mr-4'>{index + 1}.</span>
-           <span className=' mr-4'>{item.name}</span>Total Expense :{item.totalExpense}
+           <span className=' mr-4'>{item.name}</span>Total Expense :{item.totalexpense}
        </li> 
         ))}
         
