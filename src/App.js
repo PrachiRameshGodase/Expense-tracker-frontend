@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from "./components/Navbar"
 import { useSelector } from 'react-redux';
 import LeaderBoard from './components/LeaderBoard';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
   const isAuth=useSelector(state=>state.auth.isAuthenticated)
@@ -13,6 +14,7 @@ function App() {
       <Navbar/>
       <Routes>
         <Route path="/" element={<AuthForm />} />
+        <Route path='/forgotpassword' element={<ForgotPassword/>}></Route>
         <Route path="/leaderboard" element={<LeaderBoard />} />
         {isAuth ?(<Route path='/expensetracker' element={<ExpenseTracker/>}/>):(<Route path='/expensetracker' element={<AuthForm/>}/>)}
 

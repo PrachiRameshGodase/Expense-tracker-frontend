@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/AuthReducer";
 import axios from "axios"
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 function AuthForm() {
@@ -174,12 +174,15 @@ dispatch(authActions.isLogin(token))
             </button>
 
             <div className="mt-2">
+              <Link to='/forgotpassword'>
               <button
-                className="btn btn-link btn-sm itens align-items-center"
-                // onClick={forgotPasswordHandler}
+                className="btn btn-link btn-sm itens align-items-center ml-28"
+                
               >
                 Forgot Password
               </button>
+              </Link>
+             
             </div>
           </form>
         </div>
