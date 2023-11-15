@@ -106,32 +106,40 @@ export default function ExpenseTracker() {
     }
   };
 
-  function downloadExpensesAsTxt() {
-    const data = expenses.map((expense) => {
-      return `Amount: ${expense.amount} | Description: ${expense.description} | Category: ${expense.category}`;
-    });
-    const text = data.join("\n");
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
+  async function downloadExpensesAsTxt() {
+    // const data = expenses.map((expense) => {
+    //   return `Amount: ${expense.amount} | Description: ${expense.description} | Category: ${expense.category}`;
+    // });
+    // const text = data.join("\n");
+    // const blob = new Blob([text], { type: "text/plain" });
+    // const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
+    // const link = document.createElement("a");
+    // link.href = url;
+    // link.download = "expenses.txt";
+    // link.click();
+// URL.revokeObjectURL(url);
+const response= await axios.get("http://localhost:3000/download",{
+  headers: {
+    Authorization: localStorage.getItem("token"), // Include the JWT token from local storage
+  },
+})
+console.log(response.data)
+const { fileUrl}=response.data;
+const link = document.createElement("a")
+link.href = fileUrl;
     link.download = "expenses.txt";
     link.click();
 
-    URL.revokeObjectURL(url);
+    // URL.revokeObjectURL(url);
+  }
+  const allDownload=()=>{
+    navigate('/alldownload')
   }
   return (
     <>
       <div>
-        {!isPremium && (
-          <Button
-            onClick={downloadExpensesAsTxt}
-            className="flex justify-end mx-auto"
-          >
-            DownLoad File
-          </Button>
-        )}
+        
         {!isPremium && (
           <form
             onSubmit={submitHandler}
@@ -255,10 +263,14 @@ export default function ExpenseTracker() {
             <Button onClick={downloadExpensesAsTxt} className="">
               DownLoad File
             </Button>
+           
             <span className=" text-yellow-500 text-xl mr-2">
               You are Premium user
             </span>
           </div>
+          {isPremium &&  <Button onClick={allDownload} className="mt-2">
+            All Downloads
+            </Button>}
           {isPremium && (
             <form
               onSubmit={submitHandler}
