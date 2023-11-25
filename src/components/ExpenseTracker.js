@@ -11,7 +11,9 @@ export default function ExpenseTracker() {
   const formRef = useRef();
   const dispatch = useDispatch();
   const [expenses, setExpenses] = useState([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const isPremium = useSelector((state) => state.auth.isPremium);
   console.log(isPremium);
   const navigate = useNavigate();
@@ -30,25 +32,22 @@ export default function ExpenseTracker() {
       dispatch(authActions.isLogin(token));
     }
 
-    fetchExpenses();
-  }, []);
+    fetchExpenses(currentPage);
+  }, [currentPage,itemsPerPage]);
 
-  async function fetchExpenses() {
+const handleItemsPerPageChange = (event) => {
+    setItemsPerPage(parseInt(event.target.value));
+    setCurrentPage(1); // Reset the current page when items per page changes
+  };
+  async function fetchExpenses(page) {
     try {
-      const response = await axios.get("http://localhost:3000/expense");
-      const data = response.data;
-      const fetcheddata = [];
-      for (const key in data) {
-        if (data[key].userId == userId) {
-          fetcheddata.push({
-            id: data[key].id,
-            amount: data[key].amount,
-            category: data[key].category,
-            description: data[key].description,
-          });
-        }
-      }
-      setExpenses(fetcheddata);
+      const response = await axios.get("http://localhost:3000/expense",{
+        params:{page,limit:itemsPerPage},headers:{Authorization:localStorage.getItem("token")}
+      });
+      const {expenses,totalItems}=response.data
+      
+      setExpenses(expenses);
+      setTotalPages(Math.ceil(totalItems / itemsPerPage));
     } catch (err) {
       console.log(err);
     }
@@ -85,7 +84,7 @@ export default function ExpenseTracker() {
       // console.log(updateData)
       setUpdateData(null);
     }
-    fetchExpenses();
+    fetchExpenses(currentPage);
   }
 
   const deleteExpense = (expenseId) => {
@@ -141,6 +140,7 @@ link.href = fileUrl;
       <div>
         
         {!isPremium && (
+          <div>
           <form
             onSubmit={submitHandler}
             ref={formRef}
@@ -159,10 +159,7 @@ link.href = fileUrl;
               <input
                 type="number"
                 id="amount"
-                // value={amount}
-                // onChange={(event) => {
-                //   setAmount(parseInt(event.target.value));
-                // }}
+                
                 className="w-full py-2 px-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-purple-400"
               />
             </div>
@@ -216,9 +213,28 @@ link.href = fileUrl;
             <input type="text" className="hidden" />{" "}
             {/* Placeholder for the missing 'imput' element */}
           </form>
+
+          <div className="flex items-center justify-center mt-4 space-x-4">
+            <span className="text-white bg-gradient-to-b from-blue-200 to-purple-700 px-2 py-2 font-medium text-black">
+              Select Number of Rows
+            </span>
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="border bg-gradient-to-b from-blue-200 to-purple-700 border-white rounded px-3 py-2 text-black"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
+          </div>
+         
+       </div>
         )}
 
         {!isPremium && (
+          <div>
           <ul className="bg-gradient-to-b from-blue-800 via-pink-500 to-purple-500 rounded-lg shadow-md p-6 space-y-4 mt-7 mx-5">
             {expenses &&
               expenses.map((item, index) => (
@@ -247,6 +263,26 @@ link.href = fileUrl;
                 </li>
               ))}
           </ul>
+           <div className="flex justify-center mt-4 space-x-4">
+            {currentPage > 1 && (
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
+                onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+              >
+                Previous Page
+              </button>
+            )}
+
+            {currentPage < totalPages && (
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
+                onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+              >
+                Next Page
+              </button>
+            )}
+          </div>
+          </div>
         )}
       </div>
 
@@ -272,6 +308,7 @@ link.href = fileUrl;
             All Downloads
             </Button>}
           {isPremium && (
+            <div>
             <form
               onSubmit={submitHandler}
               className="bg-gradient-to-b from-green-600 via-red-700 to-green-600 rounded-lg shadow-md p-6 space-y-6 wd-full mx-auto max-w-xl mt-6"
@@ -348,9 +385,26 @@ link.href = fileUrl;
               <input type="text" className="hidden" />{" "}
               {/* Placeholder for the missing 'imput' element */}
             </form>
+            <div className="flex items-center justify-center mt-4 space-x-4">
+            <span className="text-white bg-gray-500 px-2 py-2 font-medium">
+              Select Number of Rows
+            </span>
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="border bg-gray-700 border-white rounded px-3 py-2 text-white"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
+          </div>
+            </div>
           )}
 
           {isPremium && (
+            <div>
             <ul className="bg-gradient-to-r from-red-600 via-green-500 to-red-600 rounded-lg shadow-md p-6 space-y-4 mt-7 mx-5">
               {expenses &&
                 expenses.map((item, index) => (
@@ -379,6 +433,26 @@ link.href = fileUrl;
                   </li>
                 ))}
             </ul>
+            <div className="flex justify-center mt-4 space-x-4">
+            {currentPage > 1 && (
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
+                onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+              >
+                Previous Page
+              </button>
+            )}
+
+            {currentPage < totalPages && (
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
+                onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+              >
+                Next Page
+              </button>
+            )}
+          </div>
+            </div>
           )}
         </div>
       )}
