@@ -19,7 +19,7 @@ export default function Alldownload() {
  useEffect(()=>{
         fetchData();
         if (token) {
-            dispatch(authActions.islogin(token));
+            dispatch(authActions.isLogin(token));
           }
     },[])
   return (
