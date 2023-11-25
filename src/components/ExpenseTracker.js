@@ -215,13 +215,13 @@ link.href = fileUrl;
           </form>
 
           <div className="flex items-center justify-center mt-4 space-x-4">
-            <span className="text-white bg-gradient-to-b from-blue-200 to-purple-700 px-2 py-2 font-medium text-black">
+            <span className="text-white bg-gradient-to-b from-red-400 to-purple-700 px-2 py-2 font-medium text-black rounded-lg">
               Select Number of Rows
             </span>
             <select
               value={itemsPerPage}
               onChange={handleItemsPerPageChange}
-              className="border bg-gradient-to-b from-blue-200 to-purple-700 border-white rounded px-3 py-2 text-black"
+              className="border bg-gradient-to-b from-red-400 to-purple-700 border-white rounded px-3 py-2 text-black"
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -386,13 +386,13 @@ link.href = fileUrl;
               {/* Placeholder for the missing 'imput' element */}
             </form>
             <div className="flex items-center justify-center mt-4 space-x-4">
-            <span className="text-white bg-gray-500 px-2 py-2 font-medium">
+            <span className="text-white bg-red-500 px-2 py-2 font-medium rounded-lg">
               Select Number of Rows
             </span>
             <select
               value={itemsPerPage}
               onChange={handleItemsPerPageChange}
-              className="border bg-gray-700 border-white rounded px-3 py-2 text-white"
+              className="border bg-red-500 border-white rounded px-3 py-2 text-white"
             >
               <option value="5">5</option>
               <option value="10">10</option>
