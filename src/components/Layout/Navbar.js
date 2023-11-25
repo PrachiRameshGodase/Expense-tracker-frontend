@@ -1,33 +1,31 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import classes from "../components/Navbar.module.css"
-// import { premiumActions } from "../../store/authPremium";
-// import { authActions } from "../../store/auth";
-
-import { authActions } from "../store/AuthReducer"
+import classes from "../Layout/Navbar.module.css";
+import { authActions } from "../../store/AuthReducer";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"
-import { Avatar,Tooltip } from '@mui/material';
+import axios from "axios";
+import { Avatar, Tooltip } from "@mui/material";
+
+
 function Header() {
   const [isBouncing, setIsBouncing] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
-  const isPremium = useSelector((state) => state.auth.isPremium)
-console.log("navabr",isPremium)
-  const isPremiumReload=localStorage.getItem("isPremium")
-  const token=localStorage.getItem('token')
-  const enteredEmail=localStorage.getItem('email')
+  const isPremium = useSelector((state) => state.auth.isPremium);
+  // console.log("navabr", isPremium);
+  const isPremiumReload = localStorage.getItem("isPremium");
+  const token = localStorage.getItem("token");
+  const enteredEmail = localStorage.getItem("email");
 
-  
-  const toggleAvtar=()=>{
+  const toggleAvtar = () => {
     setIsHovered((prevValue) => !prevValue);
-  }
-  useEffect(()=>{
-    dispatch(authActions.ispremium(isPremiumReload==="true"))
-  },[])
+  };
+  useEffect(() => {
+    dispatch(authActions.ispremium(isPremiumReload === "true"));
+  }, []);
 
   const navigate = useNavigate();
 
@@ -47,10 +45,10 @@ console.log("navabr",isPremium)
           },
         }
       );
-console.log(response.data)
+      console.log(response.data);
       const { keyId, orderId } = response.data;
-console.log(orderId)
-console.log(keyId)
+      console.log(orderId);
+      console.log(keyId);
       const options = {
         key: keyId,
         amount: 500, // Example amount
@@ -82,13 +80,13 @@ console.log(keyId)
             ) {
               // Payment successful and transaction updated
               //dispatch action isPremium
-              dispatch(authActions.ispremium(true))
-              localStorage.setItem("isPremium",true)
+              dispatch(authActions.ispremium(true));
+              localStorage.setItem("isPremium", true);
             }
           } else {
             // Payment failed
             // Handle the failure case
-            alert("Payment failed")
+            alert("Payment failed");
           }
         },
         prefill: {
@@ -106,17 +104,16 @@ console.log(keyId)
 
       const razorpayInstance = new window.Razorpay(options);
       razorpayInstance.open();
-
     } catch (error) {
       // Handle error
     }
   };
 
-const leaderBoardHandler=()=>{
-  navigate('/leaderboard')
-  setIsBouncing(false)
-}
-  
+  const leaderBoardHandler = () => {
+    navigate("/leaderboard");
+    setIsBouncing(false);
+  };
+
   return (
     <nav className="p-3  bg-gradient-to-b from-blue-900 to-purple-400 items-center">
       <div
@@ -134,40 +131,44 @@ const leaderBoardHandler=()=>{
         <div className="flex">
           {!isAuth && (
             <Link to="/">
-              <button className='bg-gradient-to-b from-red-600 via-red-500 to-red-800  hover:bg-purple-600 py-2 px-4 font-bold text-white rounded'>LOGIN</button>
+              <button className="bg-gradient-to-b from-red-600 via-red-500 to-red-800  hover:bg-purple-600 py-2 px-4 font-bold text-white rounded">
+                LOGIN
+              </button>
             </Link>
           )}
           {isAuth && (
-              <Tooltip
-                title={enteredEmail}
-                placement="bottom"
-                open={isHovered}
-                onClose={() => setIsHovered(false)}
-                onOpen={() => setIsHovered(true)}
-              >
-                <Avatar
+            <Tooltip
+              title={enteredEmail}
+              placement="bottom"
+              open={isHovered}
+              onClose={() => setIsHovered(false)}
+              onOpen={() => setIsHovered(true)}
+            >
+              <Avatar
                 className="bg-gradient-to-b from-yellow-200 to-pink-600 mr-3"
-              style={{ marginRight: "10px", cursor: "pointer"}}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  onClick={toggleAvtar}
-                >
-                  {!isHovered ? (
-                    <span className={classes.avatarText}>
-                      {enteredEmail && <Avatar className="bg-gradient-to-b from-yellow-200 to-pink-700 " />}
-                    </span>
-                  ) : (
-                    <span>
-                      {enteredEmail && enteredEmail.charAt(0).toUpperCase()}
-                    </span>
-                  )}
-                </Avatar>
-              </Tooltip>
-            )}
-          {isAuth && !isPremium &&(
+                style={{ marginRight: "10px", cursor: "pointer" }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onClick={toggleAvtar}
+              >
+                {!isHovered ? (
+                  <span className={classes.avatarText}>
+                    {enteredEmail && (
+                      <Avatar className="bg-gradient-to-b from-yellow-200 to-pink-700 " />
+                    )}
+                  </span>
+                ) : (
+                  <span>
+                    {enteredEmail && enteredEmail.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </Avatar>
+            </Tooltip>
+          )}
+          {isAuth && !isPremium && (
             <button
               className={`bg-gradient-to-r from-red-600 via-green-500 to-red-600 py-2 px-4 font-bold text-white rounded hover:bg-red-800  ${
-                isBouncing ? classes.bouncing : ''
+                isBouncing ? classes.bouncing : ""
               }`}
               onClick={toggleHandler}
             >
@@ -176,18 +177,18 @@ const leaderBoardHandler=()=>{
           )}
           {isAuth && isPremium && (
             <button
-            className={`bg-gradient-to-r from-red-600 via-yellow-500 to-red-600 py-2 px-4 font-bold text-white rounded hover:bg-red-800  ${
-              isBouncing ? classes.bouncing : ''
-            }`}
-            onClick={leaderBoardHandler}
-          >
-           LeaderBoard
-          </button>
+              className={`bg-gradient-to-r from-red-600 via-yellow-500 to-red-600 py-2 px-4 font-bold text-white rounded hover:bg-red-800  ${
+                isBouncing ? classes.bouncing : ""
+              }`}
+              onClick={leaderBoardHandler}
+            >
+              LeaderBoard
+            </button>
           )}
 
           {isAuth && (
             <button
-              className='bg-gradient-to-b from-red-600 via-red-500 to-red-800  hover:bg-purple-600 py-2 px-4 font-bold text-white rounded mx-5 '
+              className="bg-gradient-to-b from-red-600 via-red-500 to-red-800  hover:bg-purple-600 py-2 px-4 font-bold text-white rounded mx-5 "
               onClick={logOutHandler}
             >
               LOGOUT
@@ -215,13 +216,11 @@ export default Header;
 //   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
 //   const token = localStorage.getItem("token");
 //   const email=localStorage.getItem('email')
-  
+
 //   //   dispatch(authActions.isToggle());
 //   useEffect(() => {
 //     dispatch(authActions.ispremium(isPremiumReload === "true"));
 //   }, []);
-
- 
 
 //   const navigate = useNavigate();
 //   // const authCtx = useContext(AuthContext);
@@ -248,7 +247,7 @@ export default Header;
 
 //       const options = {
 //         key: keyId,
-//         amount: 1000, 
+//         amount: 1000,
 //         currency: "INR",
 //         name: "Sharpener",
 //         description: "Purchase Premium",
@@ -283,7 +282,7 @@ export default Header;
 //           } else {
 //             alert("Payment Failed");
 //             // Payment failed
-            
+
 //           }
 //         },
 //         prefill: {

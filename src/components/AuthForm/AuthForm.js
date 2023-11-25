@@ -1,30 +1,26 @@
 import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../store/AuthReducer";
-import axios from "axios"
+import { authActions } from "../../store/AuthReducer";
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-
 function AuthForm() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const nameInputRef = useRef();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const confirmPasswordInputRef = useRef();
   const dispatch = useDispatch();
-  
+
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
-console.log(isLoggedIn,"auth")
+  console.log(isLoggedIn, "auth");
   const [isLoading, setisLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
-  const switchAuthModeHandler=()=>{
-    setIsLogin((prevState)=>!prevState)
-  }
-  
-  
-  
+  const switchAuthModeHandler = () => {
+    setIsLogin((prevState) => !prevState);
+  };
 
   async function submitHandler(e) {
     try {
@@ -49,53 +45,50 @@ console.log(isLoggedIn,"auth")
         console.log(respone.data);
         const { token } = respone.data;
         const { userId } = respone.data;
-        const {isPremium}=respone.data
+        const { isPremium } = respone.data;
         console.log(token);
         console.log(userId);
-        console.log("ispremium from authform",isPremium)
+        console.log("ispremium from authform", isPremium);
 
         localStorage.setItem("userId", userId);
-localStorage.setItem("token", token);
-localStorage.setItem("isPremium",isPremium)
-
-
+        localStorage.setItem("token", token);
+        localStorage.setItem("isPremium", isPremium);
 
         dispatch(authActions.isLogin(token));
-        dispatch(authActions.ispremium(isPremium))
-navigate('/expensetracker')
-
+        dispatch(authActions.ispremium(isPremium));
+        navigate("/expensetracker");
       } else {
         const response = await axios.post("http://localhost:3000/login", {
           email,
           password,
         });
 
-        console.log("from auth form",response.data);
+        console.log("from auth form", response.data);
         const { token } = response.data;
         const { userId } = response.data;
-        const {isPremium}=response.data
+        const { isPremium } = response.data;
         console.log(token);
         console.log(userId);
-        console.log("ispremium from authform",isPremium)
-        dispatch(authActions.ispremium(isPremium))
+        console.log("ispremium from authform", isPremium);
+        dispatch(authActions.ispremium(isPremium));
 
         localStorage.setItem("userId", userId);
-localStorage.setItem("token", token);
-localStorage.setItem("isPremium",isPremium)
-dispatch(authActions.isLogin(token))
- 
-            navigate('/expensetracker')
+        localStorage.setItem("token", token);
+        localStorage.setItem("isPremium", isPremium);
+        dispatch(authActions.isLogin(token));
+
+        navigate("/expensetracker");
       }
     } catch (err) {
       console.log(err);
     }
   }
-  useEffect(()=>{
-    const token=localStorage.getItem('token')
-    if(token){
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
       dispatch(authActions.isLogin(token));
     }
-  },[])
+  }, []);
   return (
     <div
       className="d-flex justify-content-center align-items-center vh-100 m-auto"
@@ -174,15 +167,11 @@ dispatch(authActions.isLogin(token))
             </button>
 
             <div className="mt-2">
-              <Link to='/forgotpassword'>
-              <button
-                className="btn btn-link btn-sm itens align-items-center ml-28"
-                
-              >
-                Forgot Password
-              </button>
+              <Link to="/forgotpassword">
+                <button className="btn btn-link btn-sm itens align-items-center ml-28">
+                  Forgot Password
+                </button>
               </Link>
-             
             </div>
           </form>
         </div>

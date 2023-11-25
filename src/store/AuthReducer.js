@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialAuthState = { isAuthenticated: false ,isPremium:false,darktoggle:false};
+const initialAuthState = {
+  isAuthenticated: false,
+  isPremium: false,
+  darktoggle: false,
+};
 
 const authSlice = createSlice({
   name: "authentication",
@@ -13,21 +17,19 @@ const authSlice = createSlice({
     islogout(state) {
       state.isAuthenticated = false;
       localStorage.removeItem("token");
-      localStorage.removeItem("userId")
-      localStorage.removeItem("email")
-      localStorage.removeItem("isPremium")
-    
+      localStorage.removeItem("userId");
+      localStorage.removeItem("email");
+      localStorage.removeItem("isPremium");
     },
     ispremium(state, action) {
       console.log("from authredux", action.payload);
-      if (action.payload == true ) {
+      if (action.payload == true) {
         state.isPremium = true;
       } else {
         state.isPremium = false;
       }
     },
 
-    
     darkToggle(state) {
       state.darktoggle = !state.darktoggle;
     },
